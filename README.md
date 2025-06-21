@@ -95,7 +95,6 @@ Create a `config.env` file in the root directory with the following variables:
 
 ```env
 # MongoDB Connection String
-MONGODB_URI=mongodb+srv://your_username:your_password@your_cluster.mongodb.net/your_database?retryWrites=true&w=majority
 
 # Server Configuration
 PORT=3000
