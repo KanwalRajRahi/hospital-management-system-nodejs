@@ -1,0 +1,143 @@
+<div class="card">
+    <div class="card-header bg-primary text-white">
+        <h4><i class="fas fa-prescription-bottle-alt"></i> Create New Prescription</h4>
+    </div>
+    <div class="card-body">
+        <form action="/prescriptions" method="POST">
+            <% if (appointmentId) { %>
+                <input type="hidden" name="appointment" value="<%= appointmentId %>">
+            <% } else { %>
+                <div class="mb-3">
+                    <label for="appointment" class="form-label">Select Appointment (Optional)</label>
+                    <select class="form-select" id="appointment" name="appointment">
+                        <option value="">Select Appointment (Optional)</option>
+                        <% appointments.forEach(appointment => { %>
+                            <option value="<%= appointment._id %>" <%= appointmentId && appointmentId === appointment._id.toString() ? 'selected' : '' %>>
+                                <%= appointment.patient ? appointment.patient.name : 'Unknown Patient' %> - <%= new Date(appointment.date).toLocaleDateString() %> <%= appointment.time %>
+                            </option>
+                        <% }); %>
+                    </select>
+                </div>
+            <% } %>
+            
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="patient" class="form-label">Patient</label>
+                    <select class="form-select" id="patient" name="patient" required>
+                        <option value="">Select Patient</option>
+                        <% patients.forEach(patient => { %>
+                            <option value="<%= patient._id %>">
+                                <%= patient.name || patient['Full Name'] || 'Unknown Patient' %>
+                            </option>
+                        <% }); %>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label for="doctor" class="form-label">Doctor</label>
+                    <select class="form-select" id="doctor" name="doctor" required>
+                        <option value="">Select Doctor</option>
+                        <% doctors.forEach(doctor => { %>
+                            <option value="<%= doctor._id %>"><%= doctor.name %></option>
+                        <% }); %>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="mb-3">
+                <label class="form-label">Medications</label>
+                <div id="medications-container">
+                    <div class="medication-item border rounded p-3 mb-2">
+                        <div class="row mb-2">
+                            <div class="col-md-6">
+                                <label class="form-label">Name</label>
+                                <input type="text" class="form-control" name="medicationName[]" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Dosage</label>
+                                <input type="text" class="form-control" name="dosage[]" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label class="form-label">Frequency</label>
+                                <input type="text" class="form-control" name="frequency[]" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Duration</label>
+                                <input type="text" class="form-control" name="duration[]" required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-outline-primary btn-sm mt-2" id="add-medication">
+                    <i class="fas fa-plus"></i> Add Another Medication
+                </button>
+            </div>
+            
+            <div class="mb-3">
+                <label for="instructions" class="form-label">Instructions</label>
+                <textarea class="form-control" id="instructions" name="instructions" rows="3" required></textarea>
+            </div>
+            
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                <a href="/prescriptions" class="btn btn-secondary me-md-2">Cancel</a>
+                <button type="submit" class="btn btn-primary">Create Prescription</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const addMedicationBtn = document.getElementById('add-medication');
+        const medicationsContainer = document.getElementById('medications-container');
+        
+        addMedicationBtn.addEventListener('click', function() {
+            const medicationItem = document.createElement('div');
+            medicationItem.className = 'medication-item border rounded p-3 mb-2';
+            medicationItem.innerHTML = `
+                <div class="d-flex justify-content-between mb-2">
+                    <h6>Additional Medication</h6>
+                    <button type="button" class="btn-close remove-medication"></button>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-6">
+                        <label class="form-label">Name</label>
+                        <input type="text" class="form-control" name="medicationName[]" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Dosage</label>
+                        <input type="text" class="form-control" name="dosage[]" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="form-label">Frequency</label>
+                        <input type="text" class="form-control" name="frequency[]" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Duration</label>
+                        <input type="text" class="form-control" name="duration[]" required>
+                    </div>
+                </div>
+            `;
+            
+            medicationsContainer.appendChild(medicationItem);
+            
+            // Add event listener to remove button
+            const removeBtn = medicationItem.querySelector('.remove-medication');
+            removeBtn.addEventListener('click', function() {
+                medicationsContainer.removeChild(medicationItem);
+            });
+        });
+        
+        // If appointment is selected, auto-populate patient and doctor
+        const appointmentSelect = document.getElementById('appointment');
+        if (appointmentSelect) {
+            appointmentSelect.addEventListener('change', function() {
+                // This would require additional AJAX to fetch appointment details
+                // For simplicity, we'll leave this as a future enhancement
+            });
+        }
+    });
+</script>

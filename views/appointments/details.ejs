@@ -1,0 +1,79 @@
+<!-- Remove the layout include line -->
+<div class="card">
+    <div class="card-header bg-primary text-white">
+        <h4><i class="fas fa-calendar-check"></i> Appointment Details</h4>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <h4>Appointment Information</h4>
+                <p><strong>Date:</strong> <%= new Date(appointment.date).toLocaleDateString() %></p>
+                <p><strong>Time:</strong> <%= appointment.time %></p>
+                <p>
+                    <strong>Status:</strong> 
+                    <% if (appointment.status === 'Scheduled') { %>
+                        <span class="badge bg-primary">Scheduled</span>
+                    <% } else if (appointment.status === 'Completed') { %>
+                        <span class="badge bg-success">Completed</span>
+                    <% } else { %>
+                        <span class="badge bg-danger">Cancelled</span>
+                    <% } %>
+                </p>
+                <% if (appointment.notes) { %>
+                    <p><strong>Notes:</strong> <%= appointment.notes %></p>
+                <% } %>
+            </div>
+            <div class="col-md-6">
+                <div class="card mb-3">
+                    <div class="card-header bg-info text-white">
+                        <h5><i class="fas fa-user-md"></i> Doctor Information</h5>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Name:</strong> Dr. <%= appointment.doctor.name %></p>
+                        <p><strong>Specialization:</strong> <%= appointment.doctor.specialization %></p>
+                        <p><strong>Contact:</strong> <%= appointment.doctor.contactDetails.phone %></p>
+                        <a href="/doctors/<%= appointment.doctor._id %>" class="btn btn-sm btn-info">View Doctor Profile</a>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header bg-success text-white">
+                        <h5><i class="fas fa-user"></i> Patient Information</h5>
+                    </div>
+                    <div class="card-body">
+                        <% if (appointment.patient) { %>
+                            <p><strong>Name:</strong> <%= appointment.patient.name %></p>
+                            <p><strong>Age:</strong> <%= appointment.patient.age %> | <strong>Gender:</strong> <%= appointment.patient.gender %></p>
+                            <p><strong>Contact:</strong> <%= appointment.patient.contactDetails && appointment.patient.contactDetails.phone ? appointment.patient.contactDetails.phone : 'N/A' %></p>
+                            <a href="/patients/<%= appointment.patient._id %>" class="btn btn-sm btn-success">View Patient Profile</a>
+                        <% } else { %>
+                            <p><strong>Patient:</strong> Unknown Patient</p>
+                            <p><em>Patient information not available</em></p>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+            <a href="/appointments" class="btn btn-secondary me-md-2">
+                <i class="fas fa-arrow-left"></i> Back to Appointments
+            </a>
+            
+            <% if (appointment.status === 'Scheduled') { %>
+                <a href="/prescriptions/add?appointmentId=<%= appointment._id %>" class="btn btn-success me-md-2">
+                    <i class="fas fa-prescription"></i> Create Prescription
+                </a>
+                <a href="/appointments/<%= appointment._id %>/edit" class="btn btn-warning me-md-2">
+                    <i class="fas fa-edit"></i> Edit
+                </a>
+            <% } %>
+            
+            <form action="/appointments/<%= appointment._id %>?_method=DELETE" method="POST" class="d-inline">
+                <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this appointment?')">
+                    <i class="fas fa-trash"></i> Delete
+                </button>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,72 @@
+<div class="card">
+    <div class="card-header bg-primary text-white">
+        <h4><i class="fas fa-user-md"></i> <%= doctor.name %></h4>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <h5>Personal Information</h5>
+                <p><strong>Specialization:</strong> <%= doctor.specialization %></p>
+                <p><strong>Qualification:</strong> <%= doctor.qualification || 'N/A' %></p>
+                <p><strong>Experience:</strong> <%= doctor.experience %> <%= typeof doctor.experience === 'number' ? 'years' : '' %></p>
+            </div>
+            <div class="col-md-6">
+                <h5>Contact Details</h5>
+                <p><strong>Email:</strong> <%= doctor.email || 'N/A' %></p>
+                <p><strong>Phone:</strong> <%= doctor.phone || 'N/A' %></p>
+                <p><strong>Address:</strong> <%= doctor.address || 'N/A' %></p>
+            </div>
+        </div>
+        
+        <h5 class="mt-4">Availability</h5>
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead class="table-light">
+                    <tr>
+                        <th>Day</th>
+                        <th>Start Time</th>
+                        <th>End Time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if (doctor.availability && typeof doctor.availability === 'object') { %>
+                        <% if (Array.isArray(doctor.availability)) { %>
+                            <% doctor.availability.forEach(slot => { %>
+                                <tr>
+                                    <td><%= slot.day %></td>
+                                    <td><%= slot.startTime || slot.start_time %></td>
+                                    <td><%= slot.endTime || slot.end_time %></td>
+                                </tr>
+                            <% }); %>
+                        <% } else { %>
+                            <tr>
+                                <td><%= doctor.availability.day || 'N/A' %></td>
+                                <td><%= doctor.availability.start_time || doctor.availability.startTime || 'N/A' %></td>
+                                <td><%= doctor.availability.end_time || doctor.availability.endTime || 'N/A' %></td>
+                            </tr>
+                        <% } %>
+                    <% } else { %>
+                        <tr>
+                            <td colspan="3" class="text-center">No availability information</td>
+                        </tr>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="card-footer bg-light d-flex justify-content-between">
+        <a href="/doctors" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Back to Doctors
+        </a>
+        <div>
+            <a href="/doctors/<%= doctor._id %>/edit" class="btn btn-warning">
+                <i class="fas fa-edit"></i> Edit
+            </a>
+            <form action="/doctors/<%= doctor._id %>?_method=DELETE" method="POST" class="d-inline">
+                <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this doctor?')">
+                    <i class="fas fa-trash"></i> Delete
+                </button>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,55 @@
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1><i class="fas fa-user-md"></i> <%= title || 'All Doctors' %></h1>
+    <div>
+        <a href="/doctors/add" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Add Doctor
+        </a>
+    </div>
+</div>
+
+<div class="card mb-4">
+    <div class="card-header bg-light">
+        <form action="/doctors/search" method="GET" class="d-flex">
+            <input type="text" name="query" class="form-control me-2" placeholder="Search doctors..." value="<%= typeof query !== 'undefined' ? query : '' %>">
+            <button type="submit" class="btn btn-outline-primary">
+                <i class="fas fa-search"></i>
+            </button>
+        </form>
+    </div>
+</div>
+
+<% if (doctors.length === 0) { %>
+    <div class="alert alert-info">
+        <i class="fas fa-info-circle"></i> No doctors found.
+    </div>
+<% } else { %>
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        <% doctors.forEach(doctor => { %>
+            <div class="col">
+                <div class="card h-100">
+                    <div class="card-header bg-primary text-white">
+                        <h4><i class="fas fa-user-md"></i> <%= doctor.name %></h4>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text"><strong>Specialization:</strong> <%= doctor.specialization %></p>
+                        <p class="card-text"><strong>Email:</strong> <%= doctor.email || (doctor.contactDetails && doctor.contactDetails.email) || 'N/A' %></p>
+                        <p class="card-text"><strong>Phone:</strong> <%= doctor.phone || (doctor.contactDetails && doctor.contactDetails.phone) || 'N/A' %></p>
+                    </div>
+                    <div class="card-footer bg-light d-flex justify-content-between">
+                        <a href="/doctors/<%= doctor._id %>" class="btn btn-info btn-sm">
+                            <i class="fas fa-eye"></i> View
+                        </a>
+                        <a href="/doctors/<%= doctor._id %>/edit" class="btn btn-warning btn-sm">
+                            <i class="fas fa-edit"></i> Edit
+                        </a>
+                        <form action="/doctors/<%= doctor._id %>?_method=DELETE" method="POST" class="d-inline">
+                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this doctor?')">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        <% }); %>
+    </div>
+<% } %>

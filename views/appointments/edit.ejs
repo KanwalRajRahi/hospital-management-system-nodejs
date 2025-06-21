@@ -1,0 +1,63 @@
+<!-- Remove the layout include line -->
+<div class="card">
+    <div class="card-header bg-warning">
+        <h4><i class="fas fa-edit"></i> Edit Appointment</h4>
+    </div>
+    <div class="card-body">
+        <form action="/appointments/<%= appointment._id %>?_method=PUT" method="POST">
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="patient" class="form-label">Patient</label>
+                    <select class="form-select" id="patient" name="patient" required>
+                        <option value="">Select Patient</option>
+                        <% patients.forEach(patient => { %>
+                            <option value="<%= patient._id %>" <%= appointment.patient.toString() === patient._id.toString() ? 'selected' : '' %>>
+                                <%= patient.name %> - <%= patient.contactDetails.phone %>
+                            </option>
+                        <% }); %>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label for="doctor" class="form-label">Doctor</label>
+                    <select class="form-select" id="doctor" name="doctor" required>
+                        <option value="">Select Doctor</option>
+                        <% doctors.forEach(doctor => { %>
+                            <option value="<%= doctor._id %>" <%= appointment.doctor.toString() === doctor._id.toString() ? 'selected' : '' %>>
+                                Dr. <%= doctor.name %> - <%= doctor.specialization %>
+                            </option>
+                        <% }); %>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <label for="date" class="form-label">Date</label>
+                    <input type="date" class="form-control" id="date" name="date" value="<%= appointment.date.toISOString().split('T')[0] %>" required>
+                </div>
+                <div class="col-md-4">
+                    <label for="time" class="form-label">Time</label>
+                    <input type="time" class="form-control" id="time" name="time" value="<%= appointment.time %>" required>
+                </div>
+                <div class="col-md-4">
+                    <label for="status" class="form-label">Status</label>
+                    <select class="form-select" id="status" name="status" required>
+                        <option value="Scheduled" <%= appointment.status === 'Scheduled' ? 'selected' : '' %>>Scheduled</option>
+                        <option value="Completed" <%= appointment.status === 'Completed' ? 'selected' : '' %>>Completed</option>
+                        <option value="Cancelled" <%= appointment.status === 'Cancelled' ? 'selected' : '' %>>Cancelled</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="mb-3">
+                <label for="notes" class="form-label">Notes</label>
+                <textarea class="form-control" id="notes" name="notes" rows="3"><%= appointment.notes || '' %></textarea>
+            </div>
+            
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                <a href="/appointments/<%= appointment._id %>" class="btn btn-secondary me-md-2">Cancel</a>
+                <button type="submit" class="btn btn-primary">Update Appointment</button>
+            </div>
+        </form>
+    </div>
+</div>

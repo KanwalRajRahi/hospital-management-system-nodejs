@@ -1,0 +1,86 @@
+<div class="card">
+    <div class="card-header bg-primary text-white">
+        <h4><i class="fas fa-prescription"></i> Prescription Details</h4>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <h5>Patient Information</h5>
+                <p><strong>Name:</strong> <%= prescription.patient ? prescription.patient.name : 'Unknown Patient' %></p>
+                <p><strong>Contact:</strong> <%= prescription.patient ? prescription.patient.phone || 'N/A' : 'N/A' %></p>
+                <p><strong>Email:</strong> <%= prescription.patient ? prescription.patient.email || 'N/A' : 'N/A' %></p>
+            </div>
+            <div class="col-md-6">
+                <h5>Doctor Information</h5>
+                <p><strong>Name:</strong> Dr. <%= prescription.doctor ? prescription.doctor.name : 'Unknown Doctor' %></p>
+                <p><strong>Specialization:</strong> <%= prescription.doctor ? prescription.doctor.specialization || 'N/A' : 'N/A' %></p>
+            </div>
+        </div>
+        
+        <div class="mb-4">
+            <h5>Medications</h5>
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Name</th>
+                            <th>Dosage</th>
+                            <th>Frequency</th>
+                            <th>Duration</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% prescription.medications.forEach(med => { %>
+                            <tr>
+                                <td><%= med.name %></td>
+                                <td><%= med.dosage %></td>
+                                <td><%= med.frequency %></td>
+                                <td><%= med.duration %></td>
+                            </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <div class="mb-4">
+            <h5>Instructions</h5>
+            <div class="p-3 bg-light rounded">
+                <%= prescription.instructions %>
+            </div>
+        </div>
+        
+        <% if (prescription.notes) { %>
+            <div class="mb-4">
+                <h5>Additional Notes</h5>
+                <div class="p-3 bg-light rounded">
+                    <%= prescription.notes %>
+                </div>
+            </div>
+        <% } %>
+        
+        <div class="mb-4">
+            <h5>Prescription Information</h5>
+            <p><strong>Date:</strong> <%= new Date(prescription.createdAt).toLocaleDateString() %></p>
+            <% if (prescription.appointment) { %>
+                <p><strong>Appointment:</strong> <%= new Date(prescription.appointment.date).toLocaleDateString() %> at <%= prescription.appointment.time %></p>
+            <% } %>
+        </div>
+        
+        <div class="d-flex justify-content-between mt-4">
+            <a href="/prescriptions" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to Prescriptions
+            </a>
+            <div>
+                <a href="/prescriptions/print/<%= prescription._id %>" class="btn btn-info me-2" target="_blank">
+                    <i class="fas fa-print"></i> Print
+                </a>
+                <form action="/prescriptions/<%= prescription._id %>?_method=DELETE" method="POST" class="d-inline">
+                    <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this prescription?')">
+                        <i class="fas fa-trash"></i> Delete
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
