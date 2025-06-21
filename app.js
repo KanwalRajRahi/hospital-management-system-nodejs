@@ -1,3 +1,6 @@
+// Load environment variables
+require('dotenv').config({ path: './config.env' });
+
 const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
@@ -32,7 +35,7 @@ app.set('layout extractStyles', true);
 
 // Session and Flash setup
 app.use(session({
-    secret: 'hospital-management-secret',
+    secret: process.env.SESSION_SECRET || 'hospital-management-secret',
     resave: false,
     saveUninitialized: true,
     cookie: { maxAge: 60 * 60 * 1000 } // 1 hour

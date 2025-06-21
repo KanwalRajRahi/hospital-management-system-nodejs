@@ -3,15 +3,15 @@ const mongoose = require('mongoose');
 // Add connection pooling options
 const connectDB = async () => {
     try {
-        const conn = await mongoose.connect('mongodb+srv://databasepractice:QNYPFBwKhkDNxBlS@mongodbpractice.5im5gmq.mongodb.net/mongoDB_Practice?retryWrites=true&w=majority&appName=MongodbPractice', {
+        const conn = await mongoose.connect(process.env.MONGODB_URI, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
             // Remove deprecated poolSize option
-            socketTimeoutMS: 45000, // Increase socket timeout
-            connectTimeoutMS: 30000, // Increase connection timeout
+            socketTimeoutMS: parseInt(process.env.DB_SOCKET_TIMEOUT_MS) || 45000, // Increase socket timeout
+            connectTimeoutMS: parseInt(process.env.DB_CONNECT_TIMEOUT_MS) || 30000, // Increase connection timeout
             // Use the new connection pool settings
-            maxPoolSize: 10,
-            minPoolSize: 5
+            maxPoolSize: parseInt(process.env.DB_MAX_POOL_SIZE) || 10,
+            minPoolSize: parseInt(process.env.DB_MIN_POOL_SIZE) || 5
         });
         
         console.log(`MongoDB connected successfully`);
